@@ -1,13 +1,13 @@
-import { useState, useRef } from 'react'
-import sonnetsData from './data/sonnetsData'
-import Header from './components/Header'
-import './styles.css'
+import { useState, useRef } from "react";
+import sonnetsData from "./data/sonnetsData";
+import Header from "./components/Header";
+import "./styles.css";
 export default function App() {
-  const inputRef = useRef()
-  const [searchInput, setSearchInput] = useState('')
+  const inputRef = useRef();
+  const [searchInput, setSearchInput] = useState("");
 
   function handleClick() {
-    setSearchInput(inputRef.current.value.trim())
+    setSearchInput(inputRef.current.value.trim());
   }
 
   /* Challenge
@@ -21,12 +21,45 @@ export default function App() {
 */
 
   return (
-    <div className='wrapper'>
+    <div className="wrapper">
       <Header searchProps={{ inputRef, handleClick }} />
 
-      <div className='sonnets-container'></div>
+      <div className="sonnets-container">
+        {searchInput &&
+        sonnetsData.some((sonnet) =>
+          sonnet.lines.some((line) => line.includes(searchInput))
+        )
+          ? sonnetsData.map((sonnet) => {
+              if (sonnet.lines.some((line) => line.includes(searchInput))) {
+                return (
+                  <div className="sonnet" key={sonnet.number}>
+                    <h3>{sonnet.number}</h3>
+                    {sonnet.lines.map((line, lineIndex) => {
+                      const input = line
+                        .split(new RegExp(`(${searchInput})`, "gi"))
+                        .map((word, wordIndex) =>
+                          word.toLowerCase() === searchInput.toLowerCase() ? (
+                            <span key={wordIndex}>{word}</span>
+                          ) : (
+                            word
+                          )
+                        );
+
+                      return <p key={lineIndex}>{input}</p>;
+                    })}
+                  </div>
+                );
+              }
+              return null;
+            })
+          : searchInput && (
+              <p className="no-results-message">
+                Ne yazık ki, araman sonucunda hiçbir şey bulamadın.
+              </p>
+            )}
+      </div>
     </div>
-  )
+  );
 }
 
 /*Bonus Challenges
