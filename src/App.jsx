@@ -19,7 +19,7 @@ export default function App() {
        
     3. "Love", "summer", "winter" ve "strange" gibi yaygın sözcüklerin yanı sıra "hello" ve "weird" gibi hiçbir sonede geçmeyen sözcükleri arayarak kodunuzu test edin.
 */
-
+  // Fix this whole cthulhu-blessed goddamn spaghetti, can't move an inch without stepping on a landmine
   return (
     <div className="wrapper">
       <Header searchProps={{ inputRef, handleClick }} />
@@ -30,7 +30,11 @@ export default function App() {
           sonnet.lines.some((line) => line.includes(searchInput))
         )
           ? sonnetsData.map((sonnet) => {
-              if (sonnet.lines.some((line) => line.includes(searchInput))) {
+              if (
+                sonnet.lines.some((line) =>
+                  line.includes(searchInput.toLowerCase())
+                )
+              ) {
                 return (
                   <div className="sonnet" key={sonnet.number}>
                     <h3>{sonnet.number}</h3>
@@ -39,7 +43,7 @@ export default function App() {
                         .split(new RegExp(`(${searchInput})`, "gi"))
                         .map((word, wordIndex) =>
                           word.toLowerCase() === searchInput.toLowerCase() ? (
-                            <span key={wordIndex}>{word}</span>
+                            <span key={`${lineIndex}${wordIndex}`}>{word}</span>
                           ) : (
                             word
                           )
